@@ -4,55 +4,50 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
 
-
-
-/**
- * Manufacturer
- * 
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Manufacturer
 {
-    /** 
-     * The id of the manufacturer
-     *
-     * @ORM\Id 
-     * @ORM\GeneratedValue
-    */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    /** 
-     * The name of the manufacturer 
-     * 
-     * @ORM\String
+    /**
+     * The name of the manufacturer.
      */
+    #[ORM\Column]
     private string $name = '';
 
-    /** 
-     * The description of the manufacturer
-     * 
-     * @ORM\String
+    /**
+     * The description of the manufacturer.
      */
+    #[ORM\Column(type: "text")]
     private string $description = '';
 
-    /** 
-     * The country code of the manufacturer 
-     * 
-     * @ORM\String
+    /**
+     * The country code of the manufacturer.
      */
+    #[ORM\Column(length: 3)]
     private string $countryCode = '';
 
-    /** The date that the manufacturer was listed */
+    /**
+     * The date that the manufacturer was listed
+     *
+     */
+    #[ORM\Column(type: "datetime")]
     private ?\DateTimeInterface $listedDate = null;
 
 
-
     /**
-     * Get the value of name
-     */ 
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -64,7 +59,7 @@ class Manufacturer
         $this->name = $name;
     }
 
-    
+
     public function getDescription(): string
     {
         return $this->description;
@@ -75,7 +70,7 @@ class Manufacturer
         $this->description = $description;
     }
 
-    public function getCountryCode()
+    public function getCountryCode(): string
     {
         return $this->countryCode;
     }
@@ -85,7 +80,7 @@ class Manufacturer
         $this->countryCode = $countryCode;
     }
 
-    
+
     public function getListedDate(): \DateTimeInterface
     {
         return $this->listedDate;
