@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -26,7 +27,10 @@ class Manufacturer
      * The name of the manufacturer.
      */
     #[ORM\Column]
-    #[NotBlank]
+    #[
+        NotBlank,
+        Groups(['product.read'])
+    ]
     private string $name = '';
 
     /**
