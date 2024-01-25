@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -15,6 +17,13 @@ use Symfony\Component\Validator\Constraints\NotNull;
 #[ORM\Entity]
 #[ApiResource(
     paginationItemsPerPage: 5
+)]
+#[ApiResource(
+    uriTemplate: '/manufacturers/{id}/products.{_format}',
+    operations: [new GetCollection()],
+    uriVariables: [
+        'id' => new Link(fromProperty: 'manufacturer', fromClass: Product::class)
+    ],
 )]
 class Manufacturer
 {
@@ -58,6 +67,7 @@ class Manufacturer
     /**
      * Products of the manufacturer.
      */
+
     #[ORM\OneToMany(mappedBy: "manufacturer", targetEntity: "Product", cascade: ["persist", "remove"])]
     private iterable $products;
 
