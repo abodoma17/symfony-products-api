@@ -17,7 +17,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 #[ORM\Entity]
 #[  ApiResource(
         normalizationContext: ['groups' => ['product.read']],
-        denormalizationContext: ['groups' => ['product.write']]
+        denormalizationContext: ['groups' => ['product.write']],
+        paginationItemsPerPage: 5,
     ),
     ApiFilter(
         SearchFilter::class,
@@ -85,7 +86,8 @@ class Product
      */
     #[ORM\ManyToOne(targetEntity: "Manufacturer", inversedBy: "products")]
     #[
-        Groups(['product.read'])
+        NotNull,
+        Groups(['product.read', 'product.write'])
     ]
     private ?Manufacturer $manufacturer = null;
 
