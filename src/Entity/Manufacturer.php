@@ -3,10 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
+/**
+ * A manufacturer.
+ */
 #[ORM\Entity]
-#[ApiResource]
+#[ApiResource(
+    paginationItemsPerPage: 5
+)]
 class Manufacturer
 {
     #[ORM\Id]
@@ -18,18 +26,21 @@ class Manufacturer
      * The name of the manufacturer.
      */
     #[ORM\Column]
+    #[NotBlank]
     private string $name = '';
 
     /**
      * The description of the manufacturer.
      */
     #[ORM\Column(type: "text")]
+    #[NotBlank]
     private string $description = '';
 
     /**
      * The country code of the manufacturer.
      */
     #[ORM\Column(length: 3)]
+    #[NotBlank]
     private string $countryCode = '';
 
     /**
@@ -37,8 +48,19 @@ class Manufacturer
      *
      */
     #[ORM\Column(type: "datetime")]
+    #[NotNull]
     private ?\DateTimeInterface $listedDate = null;
 
+    /**
+     * Products of the manufacturer.
+     */
+    #[ORM\OneToMany(mappedBy: "manufacturer", targetEntity: "Product", cascade: ["persist", "remove"])]
+    private iterable $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -89,5 +111,13 @@ class Manufacturer
     public function setListedDate(?\DateTimeInterface $listedDate): void
     {
         $this->listedDate = $listedDate;
+    }
+
+    /**
+     * @return iterable
+     */
+    public function getProducts(): iterable
+    {
+        return $this->products;
     }
 }
