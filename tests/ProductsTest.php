@@ -26,6 +26,7 @@ class ProductsTest extends ApiTestCase
         $user = new User();
         $user->setEmail('test@test.com');
         $user->setPassword('$2y92tqb38as123');
+        $user->setRoles(['ROLE_ADMIN']);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

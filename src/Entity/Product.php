@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -26,6 +27,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
             new Get(),
             new Post(security: 'is_granted("ROLE_ADMIN")'),
             new Patch(security: 'is_granted("ROLE_ADMIN")'),
+            new Put(security: 'is_granted("ROLE_ADMIN") and object.getOwner() == user', securityMessage: "This product can only be edited by the user that created it."),
             new Delete(security: 'is_granted("ROLE_ADMIN")')
     ],
     normalizationContext: ['groups' => ['product.read']],
@@ -102,6 +104,13 @@ class Product
         Groups(['product.read', 'product.write'])
     ]
     private ?Manufacturer $manufacturer = null;
+
+    #[ORM\ManyToOne]
+    #[
+        NotNull,
+        Groups(['product.read', 'product.write'])
+    ]
+    private ?User $owner = null;
 
     /**
      * @return int|null
@@ -189,6 +198,18 @@ class Product
     public function setManufacturer(?Manufacturer $manufacturer): void
     {
         $this->manufacturer = $manufacturer;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
     }
 
 }
